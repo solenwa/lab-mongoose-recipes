@@ -17,7 +17,35 @@ mongoose
   })
   .then(() => {
     // Run your code here, after you have insured that the connection was made
+    // Adding one recipe
+    let oneRecipe = { title:'Tiramisu', level:'Easy Peasy', cuisine:'Italian', dishType:'dessert'}
+    return Recipe.create(oneRecipe)
+  })
+  .then(recipe => {
+    console.log('A new recipe was added:', recipe.title)
+    // Adding multiple recipes at once
+    return Recipe.insertMany(data)
+  })
+  .then(recipe => {
+    recipe.forEach(recipeAdded => console.log(`New recipe added : ${recipeAdded.title}`))
+  // Updating a recipe
+    return Recipe.findOneAndUpdate({title: 'Rigatoni alla Genovese'},{duration: 100})
+  })
+  .then(() => {
+    console.log('Recipe was successfully updated')
+  // Removing a recipe
+    return Recipe.deleteOne({title: 'Carrot Cake'})
+  })
+  .then(() => {
+    console.log('Recipe was successfully removed')
   })
   .catch(error => {
     console.error('Error connecting to the database', error);
   });
+
+  // Closing the connection
+  mongoose
+    .connection.close(() => {
+      console.log('Mongoose default connection disconnected through app termination');
+      process.exit(0)
+    })
